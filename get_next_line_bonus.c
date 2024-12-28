@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ssallami <ssallami@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 21:48:52 by ssallami          #+#    #+#             */
-/*   Updated: 2024/12/28 12:47:51 by ssallami         ###   ########.fr       */
+/*   Updated: 2024/12/28 13:35:14 by ssallami         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char    *get_after_newline(char *str)
 {
@@ -86,21 +86,20 @@ static char    *get_read(int fd, char *str)
 
 char    *get_next_line(int fd)
 {
-    static char    *str;
+    static char    *str[10240];
     char        *line;
-
     if (fd < 0 || BUFFER_SIZE <= 0)
         return (NULL);
-    str = get_read(fd, str);
-    if (!str)
+    str[fd] = get_read(fd, str[fd]);
+    if (!str[fd])
         return (NULL);
-    line = get_befor_newline(&str);
+    line = get_befor_newline(&str[fd]);
     if (!line)
     {
-        free(str);
-        str = NULL;
+        free(str[fd]);
+        str[fd] = NULL;
         return (NULL);
     }
-    str = get_after_newline(str);
+    str[fd] = get_after_newline(str[fd]);
     return (line);
 }
